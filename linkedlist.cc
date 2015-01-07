@@ -27,6 +27,19 @@ void printLL(){
 
   printf("\n");
 }
+void reverseLL(){
+
+  /* In this iterative method, we scan through the LL once. Take out each element and append it behind the head.
+     Thus, slowly, the head becomes the tail. */
+  LL *temp= head;
+  while(temp->next != NULL){
+   LL *mid_element = temp->next;
+   temp->next = mid_element->next;
+   mid_element->next = head;
+   head = mid_element;
+  }
+  printf("Reversed LL successfully \n");
+}
 
 void printReverseLL(LL *temp){
 
@@ -162,7 +175,7 @@ int main(){
    
    int option=0;
    while(true){
-    printf("1. Print, 2. InsertAter, 3. InsertBefore, 4. Del, 5. PrintReverse \n");
+    printf("1. Print, 2. InsertAter, 3. InsertBefore, 4. Del, 5. PrintReverse, 6.ReverseLL \n");
     scanf("%d",&option);
 
     switch(option){
@@ -188,6 +201,9 @@ int main(){
     case 5:
      printReverseLL(head);
      printf("\n");
+     break;
+    case 6:
+     reverseLL();
      break;
     default:
      printf("Wrong option selected \n");
