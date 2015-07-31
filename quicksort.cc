@@ -10,11 +10,14 @@
 */
 #include <stdio.h>
 
+int a[] = {4, 1, 6, 8, 5, 9, 10, 7, 2, 3};
+//int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 //int a[] = {127, 70, 90, 137, 2, 31, 63};
 //int a[] = {2, 31, 63, 70, 90, 127, 137};
 //int a[] = {137, 127, 90, 70, 63, 31, 2};
 //int a[] = {4,4,4,4,4,4,4};
-int a[] = {137, 127, 88, 137, 70, 70, 127};
+//int a[] = {137, 127, 88, 137, 70, 70, 127};
+//int a[] = {1,2};
 
 //swap
 void swap(int *array, int index1, int index2){
@@ -42,7 +45,7 @@ while(down > up)
 
    //Move left from last element, stop when any element <= pivot OR you have reached the beginning.
    for(i=down; i >= first; i--){
-     if( a[i] < a[pivot]) break;
+     if( a[i] <= a[pivot]) break;
    }
    
    //If we reached till the beginning of the array, then down=first or down=i
@@ -73,10 +76,8 @@ void print(int *array, int first, int last){
 //quicksort 
 void quicksort(int *array, int first, int last){
 
-  print(array, first, last);
   if(first >= last) return;
   int partition_index = partition(array, first, last);
-  printf("partition index = %d \n", partition_index);
   quicksort(array, first, partition_index-1);
   quicksort(array, partition_index+1, last);
 
@@ -84,8 +85,8 @@ void quicksort(int *array, int first, int last){
 
 int main(){
 
-  quicksort(a, 0, 6);
-  print(a, 0, 6);
+  quicksort(a, 0, 9);
+  print(a, 0, 9);
   return 0;
 
 }   

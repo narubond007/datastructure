@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <queue>
 
 typedef struct node{
   struct node *left;
@@ -11,7 +12,107 @@ typedef struct node{
 NODE *root = NULL;
 
 //Node will be initialized with the following values
-int init[10]={127,70,90,137,2,31,63,126,15,99};
+int init[10]={127,70,90,137,2,63,31,99,129, 77 };
+
+
+int findmin(NODE *node){
+
+  int val;
+  while(!node){
+   val = node->data;
+   node = node->left;
+  }
+
+ return val;
+
+}
+void remove(int data, NODE *parent, NODE *node){
+
+   if(data == node->data){
+
+        //If the node has no left tree, then dictly link with parent
+        if((node->left == NULL) && (node->right)) {
+          
+             if(parent->data < node->data){
+                 //shift right
+                 parent->right = node->right;
+                 free(node);
+                 return;
+             } else if (parent->data > node->data) {
+                 //shift left
+                 parent->left = node->left;
+                 free(node);
+                 return;
+             }
+        } else if ((node->right == NULL) && (node->left)) {
+
+           if(parent->data < node->data){
+                 //shift right
+                 parent->right = node->right;
+                 free(node);
+                 return;
+             } else if (parent->data > node->data) {
+                 //shift left
+                 parent->left = node->left;
+                 free(node);
+                 return;
+             }
+        } else if ((node->right == NULL) && (node->left == NULL)){
+                if(parent->data > node->data) parent->left = NULL;
+                else parent->right = NULL;
+                free(node);
+                return;
+        } else if ((node->right) && (node->left)) {
+
+
+            //Find the minimu value in the rightmost tree
+            int value = findmin(node->right);
+            node->data = value;
+            remove(value, node->right, node->right);
+        }
+     } else if( data > node->data) {
+
+          remove(data, node, node->right);
+     } else if( data < node->data) {
+
+          remove(data, node, node->left);
+     }
+}
+
+void search(NODE *node, int element){
+
+   if(node->data == element) {
+       printf("Found \n");
+       return;
+    }
+   if(node == NULL) return;
+
+   if((node->right) && (element > node->data))  search(node->right, element);
+   if((node->left) && (element < node->data))  search(node->left, element);
+
+}
+
+void BFS(NODE *node){
+
+  std::queue<NODE *> my_queue;
+ 
+  if(!node){
+    printf("Tree is empty\n");
+    return;
+  }
+ 
+  my_queue.push(node);
+
+  while(!my_queue.empty()){
+   
+     //print the element
+     NODE *temp = my_queue.front();
+     printf("%d ",temp->data);
+     if(temp->left) my_queue.push(temp->left);
+     if(temp->right) my_queue.push(temp->right);
+     my_queue.pop();
+   }
+}
 
 
 NODE* insert(NODE **temp, int data){
@@ -35,58 +136,66 @@ NODE* insert(NODE **temp, int data){
 
 
 //print using preorder, inorder, postorder
-void printInorder(){
+void printInorder(NODE *node){
 
+  if(!node) return;
+  printInorder(node->left);
+  printf("%d  ",node->data);
+  printInorder(node->right);
 
 }
+
+//print using preorder
+void printPreorder(NODE *node){
+
+  if(!node) return;
+  printf("%d  ",node->data);
+  printPreorder(node->left);
+  printPreorder(node->right);
+
+}
+
+//print using preorder, inorder, postorder
+void printPostorder(NODE *node){
+
+  if(!node) return;
+  printPostorder(node->left);
+  printPostorder(node->right);
+  printf("%d  ",node->data);
+}
+
+
 
 //functions to be implemented are insert, delete, findAndInsert, etc, print
 int main(){
 
   for(int i=0;i<10;i++){
-   printf("%d  \n",i);
    root = insert(&root, init[i]);
   }
   printf("Data is %d \n",root->data);
-  //printLL();
    
-  /* int option=0;
-   while(true){
-    printf("1. Print, 2. InsertAter, 3. InsertBefore, 4. Del, 5. PrintReverse, 6.ReverseLL \n");
-    scanf("%d",&option);
+  printf("Inorder traversal \n");
+  printInorder(root); 
+  printf("\n");
 
-    switch(option){
+  printf("Preorder traversal \n");
+  printPreorder(root);
+  printf("\n");
 
-    case 1:
-     printLL();
-     break;
-    case 2:
-     printf("Enter element to be searched, new data to be inserted ");
-     scanf("%d %d",&elementToBeSearched, &newData);
-     insertAfter(elementToBeSearched, newData);
-     break;
-    case 3:
-     printf("Enter element to be searched, new data to be inserted ");
-     scanf("%d %d",&elementToBeSearched, &newData);
-     insertBefore(elementToBeSearched, newData);
-     break;
-    case 4:
-     printf("Enter element to be deleted: ");
-     scanf("%d", &dataToBeDeleted);
-     del(dataToBeDeleted);
-     break;     
-    case 5:
-     printReverseLL(head);
-     printf("\n");
-     break;
-    case 6:
-     reverseLL();
-     break;
-    default:
-     printf("Wrong option selected \n");
+  printf("Postorder traversal \n");
+  printPostorder(root);
+  printf("\n");
 
-    }
-   } */
-    
+  printf("BFS \n");
+  BFS(root);
+  printf("\n");
+
+  printf("Search \n");
+  search(root, 99);
+
+  printf("Delete \n");
+  remove(127, root, root);
+  BFS(root);
+  printf("\n");
   return 0;
 } 

@@ -27,6 +27,21 @@ void printLL(){
 
   printf("\n");
 }
+
+//reverse LL using recursion
+void reverseLLrecursion(LL *node){
+
+  if(node==NULL) return;
+  reverseLLrecursion(node->next);
+  if(node->next == NULL) head = node;
+  else {
+       node->next->next = node;
+       node->next = NULL;
+  }
+}
+
+
+
 void reverseLL(){
 
   /* In this iterative method, we scan through the LL once. Take out each element and append it behind the head.
@@ -175,7 +190,7 @@ int main(){
    
    int option=0;
    while(true){
-    printf("1. Print, 2. InsertAter, 3. InsertBefore, 4. Del, 5. PrintReverse, 6.ReverseLL \n");
+    printf("1. Print, 2. InsertAter, 3. InsertBefore, 4. Del, 5. PrintReverse, 6.ReverseLL, 7. ReverseLLRecursion \n");
     scanf("%d",&option);
 
     switch(option){
@@ -204,6 +219,9 @@ int main(){
      break;
     case 6:
      reverseLL();
+     break;
+    case 7:
+     reverseLLrecursion(head);
      break;
     default:
      printf("Wrong option selected \n");
